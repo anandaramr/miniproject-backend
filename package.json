@@ -17,6 +17,7 @@
     "http-proxy": "^1.18.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/http-proxy": "^1.17.16",
     "@types/node": "^22.13.9",
