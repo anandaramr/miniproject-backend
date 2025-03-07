@@ -25,7 +25,6 @@ router.all('/', async (req, res) => {
         })
     
         delete headers['content-encoding']
-        delete headers['access-control-allow-origin']
         res.set(headers).status(statusCode)
     
         const contentType = response.headers.get('content-type') || 'application/octet-stream'
