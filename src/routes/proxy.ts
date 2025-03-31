@@ -1,15 +1,11 @@
-import { Router, Request, Response as ExpResponse, raw } from "express"
+import { Router, Response as ExpResponse } from "express"
 
 const router = Router()
 
 router.post('/', async (req, res) => {
     try {
         const { url, method, headers, body } = parseRequest(req.body)
-        console.log('body = ', req.body)
-        res.set(headers)
-        
         const response = await fetch(url, { method, headers, body })
-        console.log({ method, headers, body })
         await sendResponse(response, res)
     } catch (err) {
         const message = (err as Error).message
@@ -22,15 +18,21 @@ async function sendResponse(response: Response, res: ExpResponse) {
     const status = response.status
     res.status(status)
     
-    const contentType = response.headers.get('content-type') || 'application/octet-stream'
+    const contentType = response.headers.get('content-type') || 'text/plain'
     
     if (contentType.includes('application/json')) {
         const data = await response.json()
         return res.json(data)
     }
     
-    if (contentType.includes("text") || contentType.includes("html")) {
+    if (contentType.includes("text")) {
         const data = await response.text()
+        return res.send(data)
+    }
+    
+    if (contentType.includes("html")) {
+        const data = await response.text()
+        res.setHeader('content-type', 'text/html')
         return res.send(data)
     }
 
