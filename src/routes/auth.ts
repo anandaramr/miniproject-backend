@@ -15,7 +15,8 @@ router.get('/', authorize, (req, res: AuthResponse) => {
             return;
         }
 
-        res.status(200).json(data[0])
+        const { password, ...user} = data[0]
+        res.status(200).json(user)
     })
 })
 
