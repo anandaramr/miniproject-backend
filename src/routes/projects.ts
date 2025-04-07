@@ -124,7 +124,7 @@ router.delete('/collaborator', authorize, (req, res: AuthResponse) => {
     
 })
 
-router.delete('/delete/:id', authorize, (req, res: AuthResponse) => {
+router.delete('/remove/:id', authorize, (req, res: AuthResponse) => {
     const id = req.params.id
 
     if (!id) {

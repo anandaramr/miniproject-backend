@@ -3,8 +3,21 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import Pool from '../database'
 import { AuthResponse, JwtPayload } from '../types.js'
+import { authorize } from '../utils'
 
 const router = Router()
+
+router.get('/', authorize, (req, res: AuthResponse) => {
+    Pool.from('Users').select().eq('user_id', res.user?.userId)
+    .then(({ data, error}) => {
+        if (error) {
+            res.status(500).json({ error: error.message })
+            return;
+        }
+
+        res.status(200).json(data[0])
+    })
+})
 
 router.post('/register', async (req,res) => {
     if(req.body.username.length<3) {
