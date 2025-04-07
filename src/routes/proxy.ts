@@ -50,7 +50,7 @@ function parseRequest(requestBody: any) {
     if (method==="GET" || method==="HEAD") {
         body = undefined;
     } else if (contentType?.includes('application/json')) {
-        body =  JSON.stringify(rawBody)
+        body =  rawBody
     } else if (contentType?.includes('application/x-www-form-urlencoded')) {
         body = new URLSearchParams(rawBody).toString()
     }
