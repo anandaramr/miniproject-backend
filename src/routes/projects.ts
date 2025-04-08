@@ -6,7 +6,7 @@ import Pool from '../database'
 const router = Router()
 
 router.get('/', authorize, (req, res: AuthResponse) => {
-    Pool.from('Projects').select('project_id, project_name, Collaborators(project_id, user_id, is_owner)').eq('Collaborators.user_id', res.user.userId)
+    Pool.from('Projects').select('project_id, project_name, state, Collaborators(project_id, user_id, is_owner)').eq('Collaborators.user_id', res.user.userId)
     .then(async ({ data, error }) => {
         if (error) {
             res.status(500).json({ error: error.message })
@@ -18,7 +18,8 @@ router.get('/', authorize, (req, res: AuthResponse) => {
         res.status(201).json(projectsWorkedByUser.map(item => ({ 
             projectId: item.project_id, 
             projectName: item.project_name, 
-            isOwner: item.Collaborators[0].is_owner 
+            isOwner: item.Collaborators[0].is_owner,
+            state: item.state
         })))
     })
 })
