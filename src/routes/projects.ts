@@ -39,8 +39,17 @@ router.post('/new', authorize, (req, res: AuthResponse) => {
             return;
         }
 
-        await Pool.from('Collaborators').insert({ project_id: data[0].project_id, user_id: res.user.userId, is_owner: true })
-        res.status(201).json({ message: "Created new project succesfully!" })
+        const project = data[0]
+        Pool.from('Collaborators').insert({ project_id: data[0].project_id, user_id: res.user.userId, is_owner: true })
+        .then(({ error }) => {
+            if (error) {
+                res.status(500).json({ error: error.message })
+                return;
+            }
+
+            const { project_id, project_name, state } = project
+            res.status(201).json({ projectId: project_id, projectName: project_name, state })
+        })
     })
 })
 
