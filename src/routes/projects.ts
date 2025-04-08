@@ -164,7 +164,7 @@ router.post('/collaborator', authorize, async (req, res: AuthResponse) => {
 
 })
 
-router.delete('/collaborator', authorize, async (req, res: AuthResponse) => {
+router.post('/collaborator/remove', authorize, async (req, res: AuthResponse) => {
     const projectId = req.body.projectId
     const username = req.body.username
     
