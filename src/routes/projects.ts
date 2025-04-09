@@ -80,6 +80,33 @@ router.patch('/state', authorize, (req, res: AuthResponse) => {
     })
 })
 
+router.patch('/rename', authorize, (req, res: AuthResponse) => {
+    const projectId = req.body.projectId
+    const projectName = req.body.projectName
+
+    if (!projectId) {
+        res.status(400).json("Missing field: \"projectId\"")
+        return;
+    }
+
+    if (!projectName) {
+        res.status(400).json("Missing field: \"projectName\"")
+        return;
+    }
+
+    projectCollaboratorAction(res, projectId, () => {
+        Pool.from('Projects').update({ project_name: projectName }).eq('project_id', projectId)
+        .then(async ({ error }) => {
+            if (error) {
+                res.status(500).json({ error: error.message })
+                return;
+            }
+    
+            res.status(201).json({ message: "Renamed project succesfully" })
+        })
+    })
+})
+
 router.get('/collaborator/:id', authorize, async (req, res: AuthResponse) => {
     const projectId = req.params.id
     Pool.from('Collaborators').select().eq('project_id', projectId)
